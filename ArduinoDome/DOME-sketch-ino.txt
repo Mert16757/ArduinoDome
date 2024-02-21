@@ -1,0 +1,43 @@
+#include <Arduino.h>
+#include <Math.H>
+
+void setup() {
+
+  Serial.begin(9600);
+  //Serial.println("Ready");
+
+  pinMode( LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
+}
+void loop() {
+//  delay(1500);
+  String CMD = "";
+  if (Serial.available() >0 ){
+  CMD = Serial.readStringUntil('#');
+  CMD.trim();
+  if ( CMD == "GetInfo" ){
+    Serial.print("Arduino-Dome");
+    Serial.print("#");
+  } else
+  if ( CMD == "OpenShutter"){
+      Serial.print("ShutterOpening#");
+      delay(3000);
+      //  TODO  Implement some hardware solution to indicate the end of track has been reached
+      //        indicating roof open. ( Endstop )
+      //     Serial.println("ShutterOpened#");
+      Serial.flush();
+    } else if ( CMD == "CloseShutter"){
+      Serial.print("ShutterClosing#");
+      delay(3000);      
+      //  TODO  Implement some hardware solution to indicate the beginning of track has been reached
+      //        indicating roof closed. ( Endstop )
+      //      Serial.println("ShutterClosed#"); 
+      Serial.flush(); 
+    } else if ( CMD == "AbortSlew#"){
+      delay(500);
+      // TODO  implement your code to stop the motor moving the roof
+      Serial.print("SlewAborted#");
+      Serial.flush();
+    }
+  }
+}
