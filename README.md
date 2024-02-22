@@ -8,7 +8,7 @@ included as well.
 
 IF the installer can not be downloaded, you can also just download
 the driver and register it by hand ( from command window type
-ASCOM.NANO.exe /register ).
+ASCOM.NANO.exe /regserver ).
 
 Security means should be taken such that there is no danger for
 the equipment when the roof opens/closes.
