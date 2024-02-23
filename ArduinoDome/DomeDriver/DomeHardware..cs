@@ -142,6 +142,7 @@ namespace ASCOM.NANO.Dome
                 ArrayList supportedActions = new ArrayList();
                 supportedActions.Add("OpenShutter");
                 supportedActions.Add("CloseShutter");
+                supportedActions.Add("AbortSlew");
                 return supportedActions;
             }
         }
@@ -384,18 +385,18 @@ namespace ASCOM.NANO.Dome
         {
             if (!Connected)
             {
-                string ReadShutter, readShutter = string.Empty;
+                LocalServer.SharedResources.SharedSerial.ClearBuffers();
+                string AbortSlew, abortSlew = string.Empty;
                 LocalServer.SharedResources.Connected = true;
-                ReadShutter = LocalServer.SharedResources.SendMessage("AbortSlew#");
-             //   LocalServer.SharedResources.IsMoving = true;
-                readShutter = ReadShutter.Remove(ReadShutter.Length - 1, 1);
- //               Slewing = false;
-                if (readShutter == "SlewAborted")
+                AbortSlew = LocalServer.SharedResources.SendMessage("AbortSlew#");
+                abortSlew = AbortSlew.Remove(AbortSlew.Length - 1, 1);
+                if (abortSlew == "SlewAborted")
                 {
-                    domeShutterState = true;
-     //               LocalServer.SharedResources.IsMoving = false;
-   //                 Slewing = false;
-                    domeShutterState = true;
+                    LocalServer.SharedResources.SharedSerial.ClearBuffers();
+                    LocalServer.SharedResources.Connected = false;
+                    LogMessage("AbortSlew", "Completed");
+                    return;
+                    //        SlewAborted;
                 }
                 else
                 {
